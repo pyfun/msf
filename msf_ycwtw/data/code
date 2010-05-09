@@ -1,0 +1,28 @@
+from lxml.html import parse
+from lxml import etree
+parser=etree.HTMLParser(encoding='gb2312')
+url='http://market.finance.sina.com.cn/downxls.php?date=2010-04-28&symbol=sz000671'
+root=parse(url,parser=parser)
+p=root.xpath("//p")[0]
+p
+# OUT: <Element p at 2ee7af8>
+c=(i for i in p.text.split('\n'))
+c.next
+# OUT: <method-wrapper 'next' of generator object at 0x3019a00>
+c.next()
+# OUT: u'\u6210\u4ea4\u65f6\u95f4\t\u6210\u4ea4\u4ef7\t\u4ef7\u683c\u53d8\u52a8\t\u6210\u4ea4\u91cf(\u624b)\t\u6210\u4ea4\u989d(\u5143)\t\u6027\u8d28'
+c.next()
+# OUT: u'15:00:33\t11.84\t-0.01\t721\t854256\t\u5356\u76d8'
+d=([i[0],i[1],i[2],i[3],i[4],i[5]] for i in c)
+d.next()
+# OUT: [u'1', u'4', u':', u'5', u'6', u':']
+c=(i.split('\t') for i in p.text.split('\n'))
+c.next()
+# OUT: [u'\u6210\u4ea4\u65f6\u95f4', u'\u6210\u4ea4\u4ef7', u'\u4ef7\u683c\u53d8\u52a8', u'\u6210\u4ea4\u91cf(\u624b)', u'\u6210\u4ea4\u989d(\u5143)', u'\u6027\u8d28']
+c.next()
+# OUT: [u'15:00:33', u'11.84', u'-0.01', u'721', u'854256', u'\u5356\u76d8']
+d=([i[0],i[1],i[2],i[3],i[4],i[5]] for i in c)
+d.next()
+# OUT: [u'14:56:53', u'11.85', u'--', u'8', u'9480', u'\u4e70\u76d8']
+print u'\u4e70\u76d8'
+# OUT: 买盘

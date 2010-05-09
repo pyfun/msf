@@ -1,0 +1,30 @@
+import csv
+import numpy as np
+import matplotlib.pyplot as plt
+
+aReader = csv.reader(open('watertown.csv','rb'),delimiter=',')
+aReader.next()
+data = [[vixdate,float(vix)] for vixdate,vix in aReader]
+darray = np.array(data)
+belmont = darray[:,1].astype(float)
+watertown = darray[:,0].astype(float)
+
+# basic plot
+# plt.boxplot(np.column_stack((watertown,belmont)))
+# plt.text(1.9, 13000,'1 - Watertown',
+#      verticalalignment='center')
+# plt.text(1.9, 12000,'2 - Belmont',
+#      verticalalignment='center')
+
+plt.figure(1)
+plt.subplot(211)
+plt.hist(watertown)
+plt.xlim((-2000,14000)
+# plt.text(11000., 20,'1 - Watertown',
+#      verticalalignment='center')
+plt.subplot(212)
+plt.hist(belmont)
+plt.xlim((-2000,14000))
+plt.show()
+#savefig('box1')
+

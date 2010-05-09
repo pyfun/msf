@@ -1,0 +1,59 @@
+a=u'\u4e70\u76d8'
+a
+# OUT: u'\u4e70\u76d8'
+print a
+# OUT: 买盘
+a.replace('\u4e70\u76d8','buy')
+# OUT: u'\u4e70\u76d8'
+a
+# OUT: u'\u4e70\u76d8'
+b='ccd'
+b.replace('d','e')
+# OUT: 'cce'
+b
+# OUT: 'ccd'
+a
+# OUT: u'\u4e70\u76d8'
+if(a==u'\u4e70\u76d8'): c='buy'
+
+c
+# OUT: 'buy'
+a
+# OUT: u'\u4e70\u76d8'
+c='卖盘'
+c
+# OUT: '\xe5\x8d\x96\xe7\x9b\x98'
+c=c.decode('utf8')
+c
+# OUT: u'\u5356\u76d8'
+print c
+# OUT: 卖盘
+print a
+# OUT: 买盘
+d='中性盘'
+d=d.decode('u8')
+d
+# OUT: u'\u4e2d\u6027\u76d8'
+print d
+# OUT: 中性盘
+a,c,d
+# OUT: (u'\u4e70\u76d8', u'\u5356\u76d8', u'\u4e2d\u6027\u76d8')
+print a,c,d
+# OUT: 买盘 卖盘 中性盘
+aa=a.encode('u8')
+aa
+# OUT: '\xe4\xb9\xb0\xe7\x9b\x98'
+aa.replace('\xe4\xb9\xb0\xe7\x9b\x98','buy')
+# OUT: 'buy'
+import csv
+areader=csv.reader(open('test.csv'))
+areader.line_num
+# OUT: 0L
+areader.line_num()
+areader.next()
+# OUT: ['<script language="javascript">']
+import os
+os.path.getsize('test.csv')
+# OUT: 82
+os.path.getsize('test.csv')
+# OUT: 62803

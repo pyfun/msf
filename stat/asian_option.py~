@@ -1,0 +1,44 @@
+import numpy as np
+from numpy import array, zeros, sqrt, shape
+import matplotlib.pyplot as plt
+
+def brownian_path(T,N):
+    """
+    return brownian motion path
+    """
+    dt = float(T)/N
+
+    dW = np.sqrt(dt)*np.random.randn(N)
+    dW[0] = 0
+    W = np.cumsum(dW)
+    return W
+
+def asian_path(K):
+    T=1.; J=252; dt=T/J
+    mu=0.1; sigma=0.3; r=0.05
+    s0=100.
+    sim = 10000
+
+    path = (s0 * np.exp(np.linspace(dt,T,J)*(r-sigma**2/2) +
+                   sigma*brownian_path(T,J)) for i in range(sim))
+    price = np.zeros(sim)
+    ii = 0
+    for s in path:
+        payoff[ii]=np.exp(-r*T)*np.max(0,np.sum(s)/J-K)
+        ii += 1
+    return 
+        
+
+def multiple_path():
+    T=1.; N=500; dt=T/N
+    path = (np.exp(np.linspace(dt,T,N)+0.5*brownian_path(1,500)) for i in range(10))
+    total = np.zeros(N)
+    figure(1)
+    hold(True)
+    for i in path:
+        plot(range(500),i)
+        total += i
+    m = total/10
+    plot(range(500),m,lw='5.0')
+    show()
+

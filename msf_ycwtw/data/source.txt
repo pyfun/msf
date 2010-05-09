@@ -1,0 +1,10 @@
+http://www.538538.com/Stock_4---367.html?code=000671&sHour=9&sMin=27&eHour=11&eMin=27&target=dealm
+
+for the 1min price
+
+hexun api:
+http://quote.stock.hexun.com/rest1/stockdata_js.aspx?stockid=000671
+
+return StockData.getStockData("11.48","-0.37","-3.12","82.63","11.85","11.90","11.33","11.54","11.85","48357","599","2.56","0.52","48357","5581")
+
+current price, daychange, percent change,pe,open,high,low,average price,yesterday close,total shou,current show,huan shou %, liang bi,volumn (shou),amount (wan yuan)
