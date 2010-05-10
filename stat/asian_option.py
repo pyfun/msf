@@ -108,7 +108,6 @@ def asian_path_control(K):
     ci = (results[int(sim * (1 - level))],
                 results[int(sim * level)])
     return np.mean(price),np.std(price),ci
-    
         
 
 def multiple_path():
@@ -124,3 +123,8 @@ def multiple_path():
     plot(range(500),m,lw='5.0')
     show()
 
+if __name__ == '__main__':
+    for k in [80,100,120]:
+        asian_path(k)
+        asian_path_antithetic(k)
+        asian_path_control(k)
