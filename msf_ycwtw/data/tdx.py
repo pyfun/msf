@@ -1,22 +1,33 @@
 import csv
+import h5py
 import numpy as np
 
 class TDX(object):
+    """
+    save data from TDX to hdf
+
+    todo: save data to redis
+
+    use:
+    >>> a=TDX('tablea20100507')
+    >>> a.savesnap2hdf('hdf/snapdayprice_cn.hdf5')
+    >>> a.savedayprice2hdf('hdf/dayprice_cn.hdf5')
+    """
     def __init__(self, filename):
         """
         the volume in tdx is in shou (100gu)
         the amount in tdx is RMB yuan
-        filename in format table19990131.txt
+        filename in format table19990131, no extension
         """
         areader = csv.reader(open(filename),delimiter='\t')
         areader.next()
         data = [[row[0],row[11],row[13],row[14],row[3],
-         row[7],row[16]] for row in areader
-        if (not row[2].startswith('--'))]
+         float(row[7])/100,float(row[16])/10000] for row in areader
+        if (not row[16].startswith('--'))]
         self.daypricesnap = np.array(data)
         self.date = filename[-8:] #'19990131'
 
-    def savesnap(self,hdfname):
+    def savesnap2hdf(self,hdfname):
         with h5py.File(hdfname,'a') as daysnap:
             try:
                 year = daysnap[self.date[:4]]
@@ -26,13 +37,20 @@ class TDX(object):
                 month = year[self.date[4:6]]
             except KeyError:
                 month = year.create_group(self.date[4:6])
-            month[self.date[-2:]] = self.daypricesnap
+            try:
+                histnode = month[self.date[-2:]]
+                histprice = np.array(histnode)
+                del month[self.date[-2:]]
+                histprice = np.row_stack((histprice,self.daypricesnap))
+            except:
+                histprice = self.daypricesnap
+            month[self.date[-2:]] = histprice
 
-    def savedayprice(self,hdfname):
+    def savedayprice2hdf(self,hdfname):
         with h5py.File(hdfname,'a') as dayprice:
             for pricedata in self.daypricesnap:
                 if (pricedata[0].startswith('60') or
-                     pricedata[0].startswith('30')):
+                     pricedata[0].startswith('90')):
                     shprice = dayprice['SHA']
                     self._processhdf(shprice,pricedata)
                 else:
@@ -43,7 +61,7 @@ class TDX(object):
 
     def _processhdf(self,shprice,pricedatarow):
         name = pricedatarow[0]
-        print name
+        pricedatarow[0]=self.date
         try:
             shstockprice = shprice[name]
         except KeyError:
@@ -52,10 +70,12 @@ class TDX(object):
         try:
             histnode = shstockprice[self.date[:4]]
             histprice = np.array(histnode)
-            del shprice[self.date[:4]]
-            histprice = np.row_stack((histprice,pricedata))
-            shprice[self.date[:4]] = histprice
+            if (histprice[-1][0]<self.date):            
+                del shstockprice[self.date[:4]]
+                histprice = np.row_stack((histprice,pricedatarow))
+                shstockprice[self.date[:4]] = histprice
+                print 'updated',name
         except KeyError:
-            shprice[self.date[:4]] = pricedatarow
+            shstockprice[self.date[:4]] = pricedatarow
 
                                                 
